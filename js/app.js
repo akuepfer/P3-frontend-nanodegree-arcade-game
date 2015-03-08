@@ -13,11 +13,17 @@ var Enemy = function(x, y, step) {
     this.x = x;
     this.y =  y;
     this.step = step;
+    this.moveEnabled = true;
 }
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
+
+    if (!this.moveEnabled) {
+        return;
+    }
+
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
@@ -29,30 +35,78 @@ Enemy.prototype.update = function(dt) {
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (C.drawCollisionArea) {
+        drawArea(this.getArea());
+    }
 }
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+// Returns the are used for collision detection
+Enemy.prototype.getArea = function() {
+    return {
+        p1: { x: this.x +5 ,   y: this.y + 80 },
+        p2: { x: this.x + 95,  y: this.y + 80 + 60 }
+    };
+}
+
+
+Enemy.prototype.canMove = function(move) {
+    this.moveEnabled = move;
+}
+
+Enemy.prototype.increaseStep = function(value) {
+    this.step += value;
+}
 
 
 
-// A player - has to cross the board
-// Can be moved by keys
-//
-var Player = function (x, y, sprite) {
-
-    // The image/sprite for the player
-    this.sprite = sprite;
+/**
+ * A player - has to cross the board
+ * Can be moved by keys
+ *
+ * @param x the x coordinate of the player
+ * @param y the y coordinate of the player
+ * @param spriteId id counted from 0 to 4 to identify the images left from the board.
+ * @constructor
+ */
+var Player = function (x, y, spriteId) {
+    this.spriteId = spriteId
+    this.imageId = "#p" + spriteId;
+    this.sprite = $(this.imageId).attr('src');
+    $(this.imageId).css("background", "aquamarine");
     this.x = x;
     this.y = y
+    this.moveEnabled = true;
 };
 
-Player.prototype.handleInput = function(key) {
-    var MIN_X = -10, MIN_Y =  -5;
-    var MAX_X = 405, MAX_Y = 400;
+/**
+ * 'Factory' method to create the next player
+ */
+Player.prototype.getNextPlayer = function() {
+    if (this.imageId !== undefined) {
+        $(this.imageId).removeAttr("style");
+    }
+    return new Player(300, C.MAX_Y, this.spriteId + 1);
+}
 
-    var step = 10;
+/**
+ * Enable disable if a player can move.
+ * @param move true player can move, false player cannot move.
+ */
+Player.prototype.canMove = function(move) {
+    this.moveEnabled = move;
+}
+
+/**
+ * Process keyboard input.
+ * @param key a key in the range of 'left', 'right', 'up' and 'down'.
+ */
+Player.prototype.handleInput = function(key) {
+
+    if (!this.moveEnabled) {
+        return;
+    }
+
+    var step = 20;
 
     switch (key) {
         case 'left':
@@ -68,52 +122,97 @@ Player.prototype.handleInput = function(key) {
             this.y += step;
             break;
     }
-    if (this.x < MIN_X) { this.x = MIN_X}
-    if (this.x > MAX_X) { this.x = MAX_X}
-    if (this.y < MIN_Y) {
-        this.y = MIN_Y
-        allStars.push(new Star(this.x, this.y, "images/Star.png"));
-        player = new Player(300, MAX_Y, "images/char-princess-girl.png");
+    goalLine = undefined;
+    if (this.x < C.MIN_X) {
+        this.x = C.MIN_X;
     }
-    if (this.y > MAX_Y) { this.y = MAX_X}
-
+    if (this.x > C.MAX_X) {
+        this.x = C.MAX_X;
+    }
+    if (this.y < C.MIN_Y) {
+        this.y = C.MIN_Y
+        var newStar = new Star(this.x, this.y);
+        if (game.isNewStar(newStar, allStars)) {
+            game.increaseStep(allEnemies)
+            allStars.push(newStar);
+            if (allStars.length === 5) {
+                this.sprite = undefined;
+                this.moveEnabled = false;
+                game.win();
+            } else {
+                player = this.getNextPlayer();
+            }
+        } else {
+            goalLine = new GoalLine(C.strings.movon);
+        }
+    }
+    if (this.y > C.MAX_Y) {
+        this.y = C.MAX_X
+    }
+    console.log("New coord: " + this.x + " / " + this.y)
 }
 
+/**
+ * Returns true if player has colided with an enemy.
+ */
+Player.prototype.hasCollided = function() {
+    var hasCollision = false;
+    for (var i=0; i<allEnemies.length; i++) {
+        if (game.checkCollision(this.getArea(), allEnemies[i].getArea())) {
+            hasCollision = true;
+            break;
+        }
+    }
+    if (hasCollision) {
+        this.canMove(false);
+        game.stopEnemies(allEnemies)
+    }
+}
+
+
+/**
+ * Update player move - nothing to do plyer is moved by curser keys.
+ */
 Player.prototype.update = function(dt) {
-    //this.x += dt * step;
 }
 
+
+/**
+ * Renders the image of the player.
+ * Can optionally draw the rectangle utilized for collision detection.
+ */
 Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    if (this.sprite !== undefined) {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    }
+    if (C.drawCollisionArea) {
+        drawArea(this.getArea());
+    }
 }
 
 
-
-
-
-// A player - has to cross the board
-// Can be moved by keys
-//
-var Star = function (x, y, sprite) {
-
-    // The image/sprite for the player
-    this.sprite = sprite;
-    this.x = x;
-    this.y = y
-};
-
-Star.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+/**
+ * Returns the are used for collision detection
+ */
+Player.prototype.getArea = function() {
+    return {
+        p1: { "x": this.x + 22,      "y": this.y + 67 },
+        p2: { "x": this.x + 20 + 60, "y": this.y + 67 + 58 }
+    };
 }
 
-
-
-
-
-
-
-
-var allStars = [];
+/**
+ * Draws a rectangle specified by upper left (area.p1) and a lower right corner (area.p2).
+ */
+var drawArea = function(area) {
+    ctx.beginPath();
+    ctx.moveTo(area.p1.x, area.p1.y);
+    ctx.lineTo(area.p1.x, area.p2.y);
+    ctx.lineTo(area.p2.x, area.p2.y);
+    ctx.lineTo(area.p2.x, area.p1.y);
+    ctx.closePath();
+    ctx.stroke();
+}
 
 
 // Now instantiate your objects.
@@ -121,13 +220,37 @@ var allStars = [];
 // Place the player object in a variable called player
 
 var allEnemies = [
-    new Enemy(-10, 63, 10),
-    new Enemy(-10, 145, 20),
-    new Enemy(-10, 227, 30)
+    new Enemy(-50, 63, 10),
+    new Enemy(-50, 145, 20),
+    new Enemy(-50, 227, 30)
 ];
 
+/**
+ * Create the first player
+ */
+var player = new Player(200, 400, 0);
 
-var player = new Player(200, 400, "images/char-boy.png");
+/**
+ * For every row at most one star can be gained
+ */
+var allStars = [];
+
+/**
+ * The goal line for messges in the middle of the game board.
+ */
+var goalLine = new GoalLine(C.strings.move);
+
+/**
+ * The status line for messages at the bottom of the board.
+ */
+var statusLine = new StatusLine(C.strings.luck);
+
+/**
+ * Some additional functionality like collision detection has been moved to a separate object,
+ *  the Game Object.
+ */
+var game = new Game();
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -138,6 +261,10 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
     player.handleInput(allowedKeys[e.keyCode]);
+});
+
+
+$('#p0').click(function() {
+    location.reload();
 });

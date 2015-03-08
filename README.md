@@ -4,6 +4,12 @@ frontend-nanodegree-arcade-game
 [Self-checking](https://www.udacity.com/course/viewer#!/c-ud015/l-3072058665/m-3072588797) of the submission
 
 
+Personal goals
+* Use some Twitter Bootstrap from the previous couse.
+* Use som jQuery form the prevoius couse.
+
+
+
 ### Corresponding Udacity Courses
 
 * [Object-Oriented Javascript](https://www.udacity.com/course/ud015)
@@ -12,7 +18,7 @@ frontend-nanodegree-arcade-game
 ### References
 
 * [Udacity Style Guide](http://udacity.github.io/frontend-nanodegree-styleguide/javascript.html)
-* [Eloquent Javascript](http://eloquentjavascript.net/) 
+* [Eloquent Javascript](http://eloquentjavascript.net/)
 * [JavaScript: The Good Parts](http://shop.oreilly.com/product/9780596517748.do)
 * [MDN JavaScript reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference)
 * [jQuery API documentation](http://api.jquery.com/)

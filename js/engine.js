@@ -84,7 +84,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -100,6 +100,13 @@ var Engine = (function(global) {
         });
         player.update();
     }
+
+
+    function checkCollisions() {
+        player.hasCollided();
+    }
+
+
 
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
@@ -159,6 +166,10 @@ var Engine = (function(global) {
             star.render();
         });
         player.render();
+        statusLine.render();
+        if (goalLine) {
+            goalLine.render();
+        }
     }
 
     /* This function does nothing but it could have been a good place to
