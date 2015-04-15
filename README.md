@@ -1,6 +1,10 @@
 Udacity frontend-nanodegree-arcade-game
 =======================================
 
+
+[Play it now](http://akuepfer.github.io/P3-frontend-nanodegree-arcade-game/)
+
+
 ### Goal of the Project Number 3
 
 Practice the two Udacity courses
