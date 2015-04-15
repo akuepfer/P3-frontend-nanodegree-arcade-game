@@ -14,7 +14,7 @@ var Enemy = function(x, y, step) {
     this.y =  y;
     this.step = step;
     this.moveEnabled = true;
-}
+};
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -30,7 +30,7 @@ Enemy.prototype.update = function(dt) {
     this.x += dt * this.step;
     if (this.x > this.MAX_X) { this.x = this.MIN_X }
 
-}
+};
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -38,7 +38,7 @@ Enemy.prototype.render = function() {
     if (C.drawCollisionArea) {
         drawArea(this.getArea());
     }
-}
+};
 
 // Returns the are used for collision detection
 Enemy.prototype.getArea = function() {
@@ -46,16 +46,16 @@ Enemy.prototype.getArea = function() {
         p1: { x: this.x +5 ,   y: this.y + 80 },
         p2: { x: this.x + 95,  y: this.y + 80 + 60 }
     };
-}
+};
 
 
 Enemy.prototype.canMove = function(move) {
     this.moveEnabled = move;
-}
+};
 
 Enemy.prototype.increaseStep = function(value) {
     this.step += value;
-}
+};
 
 
 
@@ -69,12 +69,12 @@ Enemy.prototype.increaseStep = function(value) {
  * @constructor
  */
 var Player = function (x, y, spriteId) {
-    this.spriteId = spriteId
+    this.spriteId = spriteId;
     this.imageId = "#p" + spriteId;
     this.sprite = $(this.imageId).attr('src');
     $(this.imageId).css("background", "aquamarine");
     this.x = x;
-    this.y = y
+    this.y = y;
     this.moveEnabled = true;
 };
 
@@ -85,8 +85,9 @@ Player.prototype.getNextPlayer = function() {
     if (this.imageId !== undefined) {
         $(this.imageId).removeAttr("style");
     }
-    return new Player(300, C.MAX_Y, this.spriteId + 1);
-}
+    var x = Math.random() * C.MAX_X;
+    return new Player(x, C.MAX_Y, this.spriteId + 1);
+};
 
 /**
  * Enable disable if a player can move.
@@ -94,7 +95,7 @@ Player.prototype.getNextPlayer = function() {
  */
 Player.prototype.canMove = function(move) {
     this.moveEnabled = move;
-}
+};
 
 /**
  * Process keyboard input.
@@ -130,10 +131,10 @@ Player.prototype.handleInput = function(key) {
         this.x = C.MAX_X;
     }
     if (this.y < C.MIN_Y) {
-        this.y = C.MIN_Y
+        this.y = C.MIN_Y;
         var newStar = new Star(this.x, this.y);
         if (game.isNewStar(newStar, allStars)) {
-            game.increaseStep(allEnemies)
+            game.increaseStep(allEnemies);
             allStars.push(newStar);
             if (allStars.length === 5) {
                 this.sprite = undefined;
@@ -147,10 +148,10 @@ Player.prototype.handleInput = function(key) {
         }
     }
     if (this.y > C.MAX_Y) {
-        this.y = C.MAX_X
+        this.y = C.MAX_Y;
     }
     console.log("New coord: " + this.x + " / " + this.y)
-}
+};
 
 /**
  * Returns true if player has colided with an enemy.
@@ -167,14 +168,14 @@ Player.prototype.hasCollided = function() {
         this.canMove(false);
         game.stopEnemies(allEnemies)
     }
-}
+};
 
 
 /**
  * Update player move - nothing to do plyer is moved by curser keys.
  */
 Player.prototype.update = function(dt) {
-}
+};
 
 
 /**
@@ -188,7 +189,7 @@ Player.prototype.render = function() {
     if (C.drawCollisionArea) {
         drawArea(this.getArea());
     }
-}
+};
 
 
 /**
@@ -199,7 +200,7 @@ Player.prototype.getArea = function() {
         p1: { "x": this.x + 22,      "y": this.y + 67 },
         p2: { "x": this.x + 20 + 60, "y": this.y + 67 + 58 }
     };
-}
+};
 
 /**
  * Draws a rectangle specified by upper left (area.p1) and a lower right corner (area.p2).
@@ -212,44 +213,44 @@ var drawArea = function(area) {
     ctx.lineTo(area.p2.x, area.p1.y);
     ctx.closePath();
     ctx.stroke();
-}
+};
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-var allEnemies = [
-    new Enemy(-50, 63, 10),
-    new Enemy(-50, 145, 20),
-    new Enemy(-50, 227, 30)
-];
+var allEnemies;
 
 /**
- * Create the first player
+ * Create the first player.
+ * Intilaized in engine.reset().
  */
-var player = new Player(200, 400, 0);
+var player;
 
 /**
  * For every row at most one star can be gained
  */
-var allStars = [];
+var allStars;
 
 /**
  * The goal line for messges in the middle of the game board.
+ * Intilaized in engine.reset().
  */
-var goalLine = new GoalLine(C.strings.move);
+var goalLine;
 
 /**
  * The status line for messages at the bottom of the board.
+ * Intilaized in engine.reset().
  */
-var statusLine = new StatusLine(C.strings.luck);
+var statusLine;
 
 /**
  * Some additional functionality like collision detection has been moved to a separate object,
- *  the Game Object.
+ * the Game Object.
+ * Intilaized in engine.reset().
  */
-var game = new Game();
+var game;
 
 
 // This listens for key presses and sends the keys to your
@@ -265,6 +266,17 @@ document.addEventListener('keyup', function(e) {
 });
 
 
+/**
+ * Click on the first player to restart the game using the reset() method
+ */
 $('#p0').click(function() {
+    location.reload();
+});
+
+
+/**
+ * Click on the second player to restart the game using browser reload.
+ */
+$('#p1').click(function() {
     location.reload();
 });

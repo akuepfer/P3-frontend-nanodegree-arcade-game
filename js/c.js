@@ -28,4 +28,4 @@ var C = {
      */
     drawCollisionArea: false
 
-}
+};

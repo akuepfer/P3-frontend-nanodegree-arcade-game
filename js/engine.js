@@ -61,7 +61,7 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         win.requestAnimationFrame(main);
-    };
+    }
 
     /* This function does some initial setup that should only occur once,
      * particularly setting the lastTime variable that is required for the
@@ -172,12 +172,20 @@ var Engine = (function(global) {
         }
     }
 
-    /* This function does nothing but it could have been a good place to
-     * handle game reset states - maybe a new game menu or a game over screen
-     * those sorts of things. It's only called once by the init() method.
+    /* This function is called by init to start the game
+     * and by by reset to restart the game.0
      */
     function reset() {
-        // noop
+        allEnemies = [
+            new Enemy(-50, 63, 10),
+            new Enemy(-50, 145, 20),
+            new Enemy(-50, 227, 30)
+        ];
+        player = new Player(200, 400, 0);
+        allStars = [];
+        goalLine = new GoalLine(C.strings.move);
+        statusLine = new StatusLine(C.strings.luck);
+        game = new Game();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

@@ -21,7 +21,7 @@
  * verfication of intersection between a player and the enemy objects.
  */
 var Game = function () {
-}
+};
 
 /**
  * Returns true if areaPlayer and areaEnemy have an intersection.
@@ -42,7 +42,7 @@ Game.prototype.checkCollision = function(areaPlayer, areaEnemy) {
     }
 
     return intersecting;
-}
+};
 
 /**
  * Return true if the point point is within the area of a rectangle depict by the
@@ -51,7 +51,7 @@ Game.prototype.checkCollision = function(areaPlayer, areaEnemy) {
 Game.prototype.isIntersecting = function(point, upper, lower) {
     return point.x >= upper.x && point.x <= lower.x
         && point.y >= upper.y && point.y <= lower.y
-}
+};
 
 /***
  * Returns true if the row of the star is not occupied yet
@@ -67,7 +67,7 @@ Game.prototype.isNewStar = function(star, allStars) {
         }
     }
     return true;
-}
+};
 
 /**
  * Stops all enemies from moving.
@@ -86,7 +86,7 @@ Game.prototype.increaseStep = function(allEnemies) {
     for (var i = 0; i<allEnemies.length; i++) {
         allEnemies[i].increaseStep(Math.floor((Math.random() * 20) + 1));
     }
-}
+};
 
 /**
  * Stops moving enemies and displays messages about winning the game and restart.
@@ -95,7 +95,7 @@ Game.prototype.win = function() {
     game.stopEnemies(allEnemies);
     goalLine = new GoalLine(C.strings.win);
     statusLine = new StatusLine(C.strings.try);
-}
+};
 
 
 
@@ -106,7 +106,7 @@ Game.prototype.win = function() {
  */
 var StatusLine = function (text) {
     this.text = text;
-}
+};
 
 /**
  * Called  by the engine to display the content.
@@ -117,7 +117,7 @@ StatusLine.prototype.render = function() {
     ctx.strokeText(this.text, 40, 575);
     ctx.fillStyle = "red";
     ctx.fillText(this.text, 40, 575);
-}
+};
 
 
 
@@ -128,7 +128,7 @@ StatusLine.prototype.render = function() {
  */
 var GoalLine = function (text) {
     this.text = text;
-}
+};
 
 /**
  * Called  by the engine to display the text of the goal line.
@@ -137,7 +137,7 @@ GoalLine.prototype.render = function() {
     ctx.font="32px Verdana";
     ctx.strokeStyle = "red";
     ctx.fillText(this.text, 40, 435);
-}
+};
 
 
 
@@ -151,7 +151,7 @@ var Star = function (x, y) {
 
     this.row = undefined;
     this.sprite = "images/Star.png";
-    this.x =  this.center(x)
+    this.x =  this.center(x);
     this.y = y;
 
 };
@@ -161,7 +161,7 @@ var Star = function (x, y) {
  */
 Star.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 /**
  * Returns the center of a column
@@ -185,11 +185,11 @@ Star.prototype.center = function(xpos) {
         this.row = 4
     }
     return r;
-}
+};
 
 /**
  * Returns the row of the Star, the range is 0 .. 4.
  */
 Star.prototype.getRow = function() {
     return this.row;
-}
+};
