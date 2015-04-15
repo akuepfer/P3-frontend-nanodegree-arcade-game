@@ -82,12 +82,18 @@ var Player = function (x, y, spriteId) {
  * 'Factory' method to create the next player
  */
 Player.prototype.getNextPlayer = function() {
-    if (this.imageId !== undefined) {
-        $(this.imageId).removeAttr("style");
-    }
+    this.clearSelection();
     var x = Math.random() * C.MAX_X;
     return new Player(x, C.MAX_Y, this.spriteId + 1);
 };
+
+
+Player.prototype.clearSelection = function() {
+    if (this.imageId !== undefined) {
+        $(this.imageId).removeAttr("style");
+    }
+};
+
 
 /**
  * Enable disable if a player can move.
@@ -252,6 +258,12 @@ var statusLine;
  */
 var game;
 
+/**
+ *
+ * @type {boolean}
+ */
+var doReset = false;
+
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -270,7 +282,8 @@ document.addEventListener('keyup', function(e) {
  * Click on the first player to restart the game using the reset() method
  */
 $('#p0').click(function() {
-    location.reload();
+    player.clearSelection();
+    doReset = true;
 });
 
 

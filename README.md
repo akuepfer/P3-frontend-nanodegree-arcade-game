@@ -23,7 +23,7 @@ Practice the two Udacity courses
  * The goal of my game is to bring the five players to the upper water line of the game 
    without colliding with a running enemy. 
  * The enemies run with different speed.
- * If all 5 players reach the goal line the game is won.
+ * If all 5 players reach the water line the game is won.
  * For every player reaching the goal, the speed of the enemies will be encreased.
 
 
@@ -40,10 +40,11 @@ Practice the two Udacity courses
 <img src="pictures/active_player.png" />
 
  * For each player reaching the upper border, a star will be displayed.
- * Only one star may be won per column. If a player try to reach the water line where already a star is, the message "You better move on!" will be displayed.
+ * Only one star may be won per column. If a player tries to reach the water line where already a star is, the message "You better move on!" will be displayed.
  * If all five players reach the water line, five stars will be display and the message "Congratulation the you win!".
  * If a player collides with an enemy, the game is lost and the message "You loose!" will be displayed.
  * To restart the game, click the the first player of the Players list.
+ * To reload the game, click the the second player of the Players list.
  * Treasures are not used within the game.
 
 
