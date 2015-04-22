@@ -83,7 +83,8 @@ var Player = function (x, y, spriteId) {
  */
 Player.prototype.getNextPlayer = function() {
     this.clearSelection();
-    var x = Math.random() * C.MAX_X;
+    var col = Math.floor(Math.random() * 4)
+    var x = col * C.X_STEP;
     return new Player(x, C.MAX_Y, this.spriteId + 1);
 };
 
@@ -113,20 +114,18 @@ Player.prototype.handleInput = function(key) {
         return;
     }
 
-    var step = 20;
-
     switch (key) {
         case 'left':
-            this.x -= step;
+            this.x -= C.X_STEP;
             break;
         case'up':
-            this.y -= step;
+            this.y -= C.Y_STEP;
             break;
         case 'right':
-            this.x += step;
+            this.x += C.X_STEP;
             break;
         case 'down':
-            this.y += step;
+            this.y += C.Y_STEP;
             break;
     }
     goalLine = undefined;

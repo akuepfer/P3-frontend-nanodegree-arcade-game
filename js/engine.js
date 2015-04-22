@@ -184,9 +184,9 @@ var Engine = (function(global) {
      */
     function reset() {
         allEnemies = [
-            new Enemy(-50, 63, 10),
-            new Enemy(-50, 145, 20),
-            new Enemy(-50, 227, 30)
+            new Enemy(-50, 63, 30),
+            new Enemy(-50, 145, 50),
+            new Enemy(-50, 227, 70)
         ];
         player = new Player(200, 400, 0);
         allStars = [];

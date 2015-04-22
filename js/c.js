@@ -5,10 +5,14 @@
 var C = {
 
     // Size of the board
-    MIN_X: -10,
-    MIN_Y:  -5,
-    MAX_X: 405,
+    MIN_X:   0,
+    MIN_Y:   0,
+    MAX_X: 400,
     MAX_Y: 400,
+
+    // Step size
+    X_STEP: 100,
+    Y_STEP:  80,
 
     /**
      * Output strings

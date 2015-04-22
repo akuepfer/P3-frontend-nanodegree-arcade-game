@@ -84,7 +84,7 @@ Game.prototype.stopEnemies = function (allEnemies) {
  */
 Game.prototype.increaseStep = function(allEnemies) {
     for (var i = 0; i<allEnemies.length; i++) {
-        allEnemies[i].increaseStep(Math.floor((Math.random() * 20) + 1));
+        allEnemies[i].increaseStep(Math.floor((Math.random() * 30) + 10));
     }
 };
 
